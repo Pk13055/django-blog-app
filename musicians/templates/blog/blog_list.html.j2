@@ -1,0 +1,47 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <div class="row mt-5 pt-4">
+    <div class="col-sm">
+      <h1>Blogs</h1>
+    </div>
+  </div>
+  <div class="row">
+  {% for blog in page_obj %}
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ blog.name }}</h5>
+        <p class="card-text">{{ blog.tagline }}</p>
+        <a href="{% url 'blog:entry_list' blog.pk %}" class="btn btn-primary">View Blog</a>
+        <a href="{% url 'blog:blog_update' blog.pk %}" class="btn btn-secondary">Edit Blog</a>
+        <a href="{% url 'blog:blog_delete' blog.pk %}" class="btn btn-danger">Delete Blog</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <div class="col-sm">
+      <h1 class="mt-5">There are currently no blogs available</h1>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+  <div class="row pagination">
+    <div class="col-sm">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <div class="row mt-4 pt-5">
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ blog.name }}</h5>
+        <p class="card-text">{{ blog.tagline }}</p>
+        <form method="post">{% csrf_token %}
+          <p>Are you sure you want to delete "{{ object }}"?</p>
+          {{ form }}
+          <input type="submit" value="Confirm">
+        </form>
+       </div>
+    </div>
+  </div>
+{% endblock %}
