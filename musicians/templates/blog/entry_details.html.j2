@@ -1,0 +1,30 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <div class="row mt-5 pt-4">
+    <div class="col-sm">
+      <h1>Entry - {{ entry.headline }}</h1>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ entry.headline }}</h5>
+        <p class="card-text">Published Date: {{ entry.pub_date | date }}</p>
+        <p class="card-text">Modified Date: {{ entry.mod_date | date }}</p>
+        <p class="card-text">{{ entry.number_of_comments }} comments &amp; {{ entry.number_of_pingbacks }} pingbacks</p>
+        <p>
+          {{ entry.body_text }}
+        </p>
+        <p class="card-subtitle text-muted">Rating: {{ entry.rating }} of 5</p>
+        <p class="text-warning">
+        {% for author in entry.authors.all %}
+        {{ author.name }} ({{ author.email }}),&nbsp;
+        {% endfor %}
+        </p>
+        <a href="{% url 'blog:entry_update' entry.blog.pk entry.pk %}" class="btn btn-primary">Edit entry</a>
+        <a href="{% url 'blog:entry_delete' entry.blog.pk entry.pk %}" class="btn btn-danger">Delete entry</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
