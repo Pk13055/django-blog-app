@@ -9,7 +9,7 @@ class Blog(models.Model):
     tagline = models.TextField()
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -38,10 +38,12 @@ class Entry(models.Model):
     rating = models.IntegerField(default=5)
 
     class Meta:
-        ordering = ['pub_date', '-mod_date']
+        ordering = ["pub_date", "-mod_date"]
 
     def __str__(self):
         return self.headline
 
     def get_absolute_url(self):
-        return reverse('blog:entry_details', kwargs={'pk': self.pk, 'blog_id': self.blog.pk})
+        return reverse(
+            "blog:entry_details", kwargs={"pk": self.pk, "blog_id": self.blog.pk}
+        )

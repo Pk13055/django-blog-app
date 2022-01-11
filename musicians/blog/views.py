@@ -1,13 +1,33 @@
 from django.urls import reverse
 from django.urls.base import reverse_lazy
+from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.views import redirect_to_login
 
 from blog.models import Author, Blog, Entry
 
 
-class BlogListView(ListView):
+class UserAccessMixin(PermissionRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+
+        if not self.request.user.is_authenticated:
+            return redirect_to_login(
+                self.request.get_full_path(),
+                self.get_login_url(),
+                self.get_redirect_field_name(),
+            )
+        if not self.has_permission():
+            return redirect(reverse("login"))
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class BlogListView(UserAccessMixin, ListView):
     """Displays all the blogs in a paginated fashion"""
+
+    permission_required = ("blog.view_blog",)
 
     template_name = "blog/blog_list.html.j2"
     context_object_name = "blogs"
@@ -15,16 +35,20 @@ class BlogListView(ListView):
     model = Blog
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(PermissionRequiredMixin, CreateView):
     """Form to create a new blog"""
+
+    permission_required = ("blog.add_blog",)
 
     template_name = "blog/blog_create.html.j2"
     model = Blog
     fields = ["name", "tagline"]
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(PermissionRequiredMixin, DeleteView):
     """Displays a confirmation for the deletion of a blog"""
+
+    permission_required = ("blog.delete_blog",)
 
     template_name = "blog/blog_delete_confirm.html.j2"
     model = Blog
@@ -32,8 +56,11 @@ class BlogDeleteView(DeleteView):
     success_url = reverse_lazy("blog:blog_list")
 
 
-class EntryListView(ListView):
+class EntryListView(PermissionRequiredMixin, ListView):
     """Displays all the entries in a blog in a paginated fashion"""
+
+    permission_required = ("blog.view_entry",)
+    raise_exception = False
 
     template_name = "blog/entry_list.html.j2"
     paginate_by = 5
@@ -48,7 +75,10 @@ class EntryListView(ListView):
         return context
 
 
-class EntryAuthorListView(ListView):
+class EntryAuthorListView(PermissionRequiredMixin, ListView):
+
+    permission_required = ("blog.view_entry",)
+
     template_name = "blog/entry_list.html.j2"
     paginate_by = 5
     model = Entry
@@ -62,16 +92,20 @@ class EntryAuthorListView(ListView):
         return context
 
 
-class EntryDetailView(DetailView):
+class EntryDetailView(PermissionRequiredMixin, DetailView):
     """Displays the details of a particular entry"""
+
+    permission_required = ("blog.view_entry",)
 
     template_name = "blog/entry_details.html.j2"
     context_object_name = "entry"
     model = Entry
 
 
-class EntryDeleteView(DeleteView):
+class EntryDeleteView(PermissionRequiredMixin, DeleteView):
     """Displays a confirmation for the deletion of an entry"""
+
+    permission_required = ("blog.delete_entry",)
 
     model = Entry
     context_object_name = "entry"
@@ -81,8 +115,10 @@ class EntryDeleteView(DeleteView):
         return reverse("blog:entry_list", kwargs={"pk": self.object.blog_id})
 
 
-class EntryCreateView(CreateView):
+class EntryCreateView(PermissionRequiredMixin, CreateView):
     """Form to create a new entry"""
+
+    permission_required = ("blog.add_entry",)
 
     model = Entry
     template_name = "blog/entry_create.html.j2"
@@ -102,8 +138,10 @@ class EntryCreateView(CreateView):
         return super().form_valid(form)
 
 
-class EntryUpdateView(UpdateView):
+class EntryUpdateView(PermissionRequiredMixin, UpdateView):
     """Update form to update a given entry"""
+
+    permission_required = ("blog.change_entry",)
 
     template_name = "blog/entry_update_details.html.j2"
     model = Entry
@@ -120,8 +158,10 @@ class EntryUpdateView(UpdateView):
     ]
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(PermissionRequiredMixin, UpdateView):
     """Update form to update a blog"""
+
+    permission_required = ("blog.change_blog",)
 
     template_name = "blog/blog_update_details.html.j2"
     model = Blog

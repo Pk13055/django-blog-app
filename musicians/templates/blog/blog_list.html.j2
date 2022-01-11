@@ -3,7 +3,9 @@
   <div class="row mt-5 pt-4">
     <div class="col-sm">
       <h1>Blogs
+      {% if perms.blog.add_blog %}
       <a href="{% url 'blog:blog_create' %}" class="btn btn-primary">Create Blog</a>
+      {% endif %}
       </h1>
     </div>
   </div>
@@ -14,9 +16,15 @@
       <div class="card-body">
         <h5 class="card-title">{{ blog.name }}</h5>
         <p class="card-text">{{ blog.tagline }}</p>
+        {% if perms.blog.view_entry %}
         <a href="{% url 'blog:entry_list' blog.pk %}" class="btn btn-primary">View Blog</a>
+        {% endif %}
+        {% if perms.blog.change_blog %}
         <a href="{% url 'blog:blog_update' blog.pk %}" class="btn btn-secondary">Edit Blog</a>
+        {% endif %}
+        {% if perms.blog.delete_blog %}
         <a href="{% url 'blog:blog_delete' blog.pk %}" class="btn btn-danger">Delete Blog</a>
+        {% endif %}
       </div>
     </div>
   </div>

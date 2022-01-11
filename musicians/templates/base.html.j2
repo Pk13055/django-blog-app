@@ -27,6 +27,14 @@
             <li class="nav-item">
               <a class="nav-link" href="/blog/">Blogs</a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-text my-2">
+              User: {{ user.get_username }}
+            </li>
+            <a class="nav-link" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a>
+            {% endif %}
         </div>
       </nav>
     </header>

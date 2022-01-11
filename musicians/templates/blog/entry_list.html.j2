@@ -4,10 +4,12 @@
     <div class="col-sm">
     {% if blog %}
       <h1>Entries - {{ blog.name }}
-        <a href="{% url 'blog:entry_create' blog.pk %}" class="btn btn-primary">Create Entry</a>
+        {% if perms.blog.add_entry %}
+          <a href="{% url 'blog:entry_create' blog.pk %}" class="btn btn-primary">Create Entry</a>
+        {% endif %}
       </h1>
       {% else %}
-      <h1> Entries - {{ author.name }}
+      <h1> Entries - {{ author.name }}</h1>
       {% endif %}
     </div>
   </div>

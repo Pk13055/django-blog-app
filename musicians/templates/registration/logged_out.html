@@ -1,0 +1,7 @@
+{% extends "base.html.j2" %}
+{% block content %}
+<div class="row mt-4 pt-5">
+  <p>Logged out!</p>
+  <a href="{% url 'login'%}">Click here to login again.</a>
+</div>
+{% endblock %}

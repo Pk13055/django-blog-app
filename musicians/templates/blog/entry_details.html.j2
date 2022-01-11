@@ -19,12 +19,20 @@
         <p class="card-subtitle text-muted">Rating: {{ entry.rating }} of 5</p>
         <p class="text-warning">
         {% for author in entry.authors.all %}
+        {% if perms.blog.view_entry %}
         <a href="{% url 'blog:entry_author_list' author.pk %}">{{ author.name }}</a>
+        {% else %}
+        {{ author.name }}
+        {% endif %}
         ({{ author.email }}),&nbsp;
         {% endfor %}
         </p>
+        {% if perms.blog.change_entry %}
         <a href="{% url 'blog:entry_update' entry.blog.pk entry.pk %}" class="btn btn-primary">Edit entry</a>
+        {% endif %}
+        {% if perms.blog.delete_entry %}
         <a href="{% url 'blog:entry_delete' entry.blog.pk entry.pk %}" class="btn btn-danger">Delete entry</a>
+        {% endif %}
       </div>
     </div>
   </div>
