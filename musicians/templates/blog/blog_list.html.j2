@@ -2,7 +2,9 @@
 {% block content %}
   <div class="row mt-5 pt-4">
     <div class="col-sm">
-      <h1>Blogs</h1>
+      <h1>Blogs
+      <a href="{% url 'blog:blog_create' %}" class="btn btn-primary">Create Blog</a>
+      </h1>
     </div>
   </div>
   <div class="row">

@@ -19,7 +19,8 @@
         <p class="card-subtitle text-muted">Rating: {{ entry.rating }} of 5</p>
         <p class="text-warning">
         {% for author in entry.authors.all %}
-        {{ author.name }} ({{ author.email }}),&nbsp;
+        <a href="{% url 'blog:entry_author_list' author.pk %}">{{ author.name }}</a>
+        ({{ author.email }}),&nbsp;
         {% endfor %}
         </p>
         <a href="{% url 'blog:entry_update' entry.blog.pk entry.pk %}" class="btn btn-primary">Edit entry</a>

@@ -2,7 +2,13 @@
 {% block content %}
   <div class="row mt-5 pt-4">
     <div class="col-sm">
-      <h1>Entries - {{ blog.name }}</h1>
+    {% if blog %}
+      <h1>Entries - {{ blog.name }}
+        <a href="{% url 'blog:entry_create' blog.pk %}" class="btn btn-primary">Create Entry</a>
+      </h1>
+      {% else %}
+      <h1> Entries - {{ author.name }}
+      {% endif %}
     </div>
   </div>
   <div class="row">
@@ -12,7 +18,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ entry.headline }}</h5>
         <p class="card-text">{{ entry.pub_date | date }}</p>
-        <a href="{% url 'blog:entry_details' blog.pk entry.pk %}" class="btn btn-primary">View entry</a>
+        <a href="{% url 'blog:entry_details' entry.blog.pk entry.pk %}" class="btn btn-primary">View entry</a>
       </div>
     </div>
   </div>
